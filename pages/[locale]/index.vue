@@ -2,7 +2,8 @@
   <section>
     <sections-hero />
     <sections-why-choose-us />
-    <lazy-sections-about />
+    <lazy-sections-about-us />
+    <lazy-sections-factors-of-success />
     <lazy-sections-posters />
     <lazy-sections-our-vision />
     <lazy-sections-our-goals />

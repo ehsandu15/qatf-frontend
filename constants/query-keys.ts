@@ -12,6 +12,7 @@ export const QUERY_KEYS = {
       ourVision: "home:ourVision",
       ourGoals: "home:ourGoals",
       ourCustomers: "home:ourCustomers",
+      factorsOfSuccess: "home:factorsOfSuccess",
     },
     privacyPolicy: "privacyPolicy",
     aboutUs: "about",

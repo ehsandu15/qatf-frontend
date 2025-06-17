@@ -34,6 +34,7 @@ export default defineNuxtConfig({
       directusUrl: process.env.DIRECTUS_URL,
       directusAccessToken: process.env.DIRECTUS_ACCESS_TOKEN,
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL,
+      turnstileSiteKey: process.env.TURNSTILE_SITE_KEY,
       i18n: {
         defaultLocale: {
           id: "1",
@@ -60,6 +61,7 @@ export default defineNuxtConfig({
         },
       },
     },
+    turnstile: { secretKey: process.env.TURNSTILE_SECRET_KEY },
   },
   image: {
     directus: {

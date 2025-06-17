@@ -184,7 +184,7 @@ const { data } = await useAsyncData(QUERY_KEYS.globalConfig.appHeader, () =>
   $directus.query(`
     query {
       appFooter {
-        websiteLinks {
+        websiteLinks (filter: { status: { _eq: "published" } }) {
           id
           translations {
             id
@@ -201,7 +201,7 @@ const { data } = await useAsyncData(QUERY_KEYS.globalConfig.appHeader, () =>
         closeSideNaviationMenuIcon
         cartButtonIcon
         ctaButtonHref
-        navLinks {
+        navLinks (filter: { status: { _eq: "published" } }) {
           id
           translations {
             id

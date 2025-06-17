@@ -2,87 +2,110 @@
   <section
     class="app-container flex gap-5 items-start justify-start my-8 md:my-16 flex-col"
   >
-    <div
-      class="w-full flex items-start justify-start gap-5 max-lg:flex-col-reverse"
-    >
-      <nuxt-img
-        provider="directus"
-        :src="aboutUs.image"
-        alt="hero.jpg"
-        class="w-full lg:w-[35%] min-h-[15rem] lg:min-h-[37.5rem] object-cover rounded-[20px]"
-      />
-      <div
-        class="w-full lg:w-[calc(64%-1.25rem)] flex items-start justify-start gap-3 flex-col"
+    <!-- about us hero -->
+    <div class="w-full">
+      <span
+        class="w-full tablet:w-[calc(100%-20rem)] flex flex-col gap-3 ms-auto mb-8"
       >
         <p
-          class="relative text-secondary text-base lg:text-xs font-bold mb-2 text-center before:absolute before:bottom-0 before:left-0 before:w-full before:rounded-full before:h-1/2 before:bg-gradient-to-t px-2 py-1 before:from-secondary/60 isolate"
+          class="relative w-fit text-secondary max-md:text-base text-xs font-bold mb-1 before:absolute before:bottom-0 before:left-0 before:w-full before:rounded-full before:h-1/2 before:bg-gradient-to-t px-2 py-1 before:from-secondary/60 isolate"
         >
-          {{ aboutUs.headingTitle }}
+          {{ aboutUs?.headingTitle }}
         </p>
-        <heading-highlighted-title
-          class="text-[28px] lg:text-[32px] font-semibold text-black leading-snug !justify-start"
-          :words="descriptionSpacialWords"
-          :title="
-            aboutUs.descriptionText
-              ?.replaceAll(SPACIAL_WORD_INDICATOR_START, '')
-              .replaceAll(SPACIAL_WORD_INDICATOR_END, '')
-          "
-          main-text-color-class-name="text-black/90"
-          marked-text-color-class-name="!text-primary"
-        />
+        <h4
+          class="text-black font-bold text-[18px] lg:text-[24px] text-start ltr:leading-tight"
+        >
+          {{ aboutUs?.BriefText }}
+        </h4>
+      </span>
 
-        <div class="w-full flex items-center justify-start gap-4 mt-8">
+      <div class="w-full relative">
+        <!-- about-us hero image -->
+        <figure
+          class="w-full h-[80dvh] tablet:h-[380px] overflow-hidden rounded-2xl bg-no-repeat bg-cover bg-center"
+          :style="{
+            backgroundImage: `url(${img(aboutUs?.image, undefined, {
+              provider: 'directus',
+            })})`,
+          }"
+        >
+          <div
+            class="absolute inset-0 flex items-center justify-start max-tablet:flex-col gap-5 bg-neutral-700/40 rounded-2xl tablet:py-20 tablet:pe-10 p-6"
+          >
+            <div
+              class="absolute bottom-0 max-tablet:bottom-0 rtl:tablet:-right-3 ltr:tablet:-left-3 max-tablet:w-full max-w-full max-h-1/2 tablet:max-w-[30%]"
+            >
+              <NuxtImg
+                provider="directus"
+                :src="aboutUs?.personImage"
+                :alt="aboutUs?.aboutUsTitle"
+                class="max-w-1/2 tablet:max-w-full object-cover rounded-2xl"
+              />
+            </div>
+            <p
+              class="text-white text-base tablet:text-xl lg:text-2xl font-semibold text-center w-full max-md:max-h-1/2 tablet:max-w-[70%] ms-auto"
+            >
+              {{ aboutUs?.descriptionText }}
+            </p>
+          </div>
+        </figure>
+      </div>
+
+      <!-- about-us features box's -->
+      <div
+        class="w-full grid grid-cols-2 items-center justify-start gap-4 mt-8"
+      >
+        <span
+          class="min-h-[146px] relative flex items-center justify-center p-5 bg-black rounded-[20px]"
+        >
           <span
-            class="min-w-[calc(50%-1rem)] min-h-[146px] relative flex items-center justify-center p-5 bg-black rounded-[20px]"
+            class="absolute w-full top-0 pe-2 left-0 rtl:rounded-tr-[20px] ltr:rounded-tl-[20px] overflow-hidden flex items-center justify-between"
           >
             <span
-              class="absolute w-full top-0 pe-2 left-0 rtl:rounded-tr-[20px] ltr:rounded-tl-[20px] overflow-hidden flex items-center justify-between"
+              class="px-4 py-3 md:px-6 md:py-5 text-white max-md:text-xs bg-zinc-900 flex items-center justify-center rtl:rounded-bl-full ltr:rounded-br-full ltr:rounded-bl-none"
             >
-              <span
-                class="px-4 py-3 md:px-6 md:py-5 text-white max-md:text-xs bg-zinc-900 flex items-center justify-center rtl:rounded-bl-full ltr:rounded-br-full ltr:rounded-bl-none"
-              >
-                <p>{{ aboutUs.secondaryBoxTitle }}</p>
-              </span>
-              <span
-                class="flex size-8 md:size-10 p-1.5 md:p-2 relative bg-white rounded-full"
-              >
-                <span class="size-full rounded-full flex bg-black" />
-              </span>
+              <p>{{ aboutUs.secondaryBoxTitle }}</p>
             </span>
-            <h3
-              class="text-white mt-14 md:mt-24 pb-5 tablet:lg-8 text-base tablet:text-xl font-bold max-w-full overflow-hidden truncate"
+            <span
+              class="flex size-8 md:size-10 p-1.5 md:p-2 relative bg-white rounded-full"
             >
-              {{ aboutUs.secondaryBoxDescription }}
-            </h3>
+              <span class="size-full rounded-full flex bg-black" />
+            </span>
           </span>
+          <h3
+            class="text-white mt-14 md:mt-24 pb-5 tablet:lg-8 text-base tablet:text-xl font-bold max-w-full overflow-hidden truncate"
+          >
+            {{ aboutUs.secondaryBoxDescription }}
+          </h3>
+        </span>
+        <span
+          class="min-h-[146px] relative flex items-center justify-center p-5 bg-primary rounded-[20px]"
+        >
           <span
-            class="min-w-[calc(50%-1rem)] min-h-[146px] relative flex items-center justify-center p-5 bg-primary rounded-[20px]"
+            class="absolute w-full top-0 ps-2 left-0 rtl:rounded-tl-[20px] ltr:rounded-tr-[20px] overflow-hidden flex items-center justify-between flex-row-reverse"
           >
             <span
-              class="absolute w-full top-0 ps-2 left-0 rtl:rounded-tl-[20px] ltr:rounded-tr-[20px] overflow-hidden flex items-center justify-between flex-row-reverse"
+              class="px-4 py-3 md:px-6 md:py-5 text-white max-md:text-xs bg-primary brightness-110 flex items-center justify-center rtl:rounded-br-full ltr:rounded-bl-full"
             >
-              <span
-                class="px-4 py-3 md:px-6 md:py-5 text-white max-md:text-xs bg-primary brightness-110 flex items-center justify-center rtl:rounded-br-full ltr:rounded-bl-full"
-              >
-                <p>{{ aboutUs.primaryBoxTitle }}</p>
-              </span>
-              <span
-                class="flex size-8 md:size-10 p-1.5 md:p-2 relative bg-white rounded-full"
-              >
-                <span class="size-full rounded-full flex bg-primary" />
-              </span>
+              <p>{{ aboutUs.primaryBoxTitle }}</p>
             </span>
-            <h3
-              class="text-white mt-14 md:mt-24 pb-5 lg:px-8 text-base tablet:text-xl font-bold max-w-full overflow-hidden truncate"
+            <span
+              class="flex size-8 md:size-10 p-1.5 md:p-2 relative bg-white rounded-full"
             >
-              {{ aboutUs.primaryBoxDescription }}
-            </h3>
+              <span class="size-full rounded-full flex bg-primary" />
+            </span>
           </span>
-        </div>
+          <h3
+            class="text-white mt-14 md:mt-24 pb-5 lg:px-8 text-base tablet:text-xl font-bold max-w-full overflow-hidden truncate"
+          >
+            {{ aboutUs.primaryBoxDescription }}
+          </h3>
+        </span>
       </div>
     </div>
-    <sections-posters />
-
+    <sections-posters class="!max-w-full w-full !px-0" />
+    <lazy-sections-our-vision class="!max-w-full w-full !px-0" />
+    <lazy-sections-our-goals class="!max-w-full w-full !px-0" />
     <div class="w-full flex flex-col items-center justify-center mt-16">
       <h3
         class="text-[32px] tablet:text-4xl font-semibold tablet:font-bold text-center mb-4"
@@ -127,8 +150,7 @@
 <script setup lang="ts">
 import { QUERY_KEYS } from "~/constants/query-keys";
 
-const SPACIAL_WORD_INDICATOR_START = "<mark>";
-const SPACIAL_WORD_INDICATOR_END = "<mark/>";
+const img = useImage();
 const { currentLocale, getLocaleObject } = useI18n();
 const { $directus } = useNuxtApp();
 const { data } = await useAsyncData(QUERY_KEYS.pages.aboutUs, () =>
@@ -138,6 +160,8 @@ const { data } = await useAsyncData(QUERY_KEYS.pages.aboutUs, () =>
         aboutUs {
           id
           image
+          image
+          personImage
           posterFarStartImage
           posterSecondStartImage
           posterCentredImage
@@ -157,6 +181,7 @@ const { data } = await useAsyncData(QUERY_KEYS.pages.aboutUs, () =>
             id
             languages_id
             headingTitle
+            BriefText
             descriptionText
             primaryBoxTitle
             primaryBoxDescription
@@ -200,20 +225,4 @@ const aboutUs = computed(() => ({
       getLocaleObject(currentLocale.value).id
   ),
 }));
-
-const descriptionSpacialWords = computed(() => {
-  const description = aboutUs.value?.descriptionText;
-  if (!description) return [];
-
-  const pattern = new RegExp(
-    `${SPACIAL_WORD_INDICATOR_START}(.*?)${SPACIAL_WORD_INDICATOR_END}`,
-    "g"
-  );
-
-  const matches = [...description.matchAll(pattern)];
-
-  return matches
-    ?.map((match) => match[1]?.trim())
-    ?.map((i) => i?.split(" "))[0];
-});
 </script>

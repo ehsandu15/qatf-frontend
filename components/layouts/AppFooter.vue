@@ -138,12 +138,12 @@ const { data } = await useAsyncData(QUERY_KEYS.globalConfig.appFooter, () =>
         id
         logoImage
         backgroundImage
-        socialMedia {
+        socialMedia (filter: { status: { _eq: "published" } }) {
           id
           icon
           platformUrl
         }
-        websiteLinks {
+        websiteLinks (filter: { status: { _eq: "published" } }) {
           id
           translations {
             id

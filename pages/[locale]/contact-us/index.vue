@@ -130,27 +130,39 @@
           }}</span
         >
       </div>
-      <button
-        v-if="!isSuccess && !isError"
-        type="submit"
-        class="w-full flex items-center justify-center sm:w-[calc(50%-1.5rem)] text-white px-4 py-2 rounded-lg mt-4 bg-black transition-colors hover:bg-secondary disabled:bg-slate-500"
-        :disabled="
-          isLoading ||
-          !phoneNumber ||
-          !form.email ||
-          !form.companyName ||
-          !form.message
-        "
-      >
-        <span
-          v-if="isLoading"
-          class="size-8 rounded-full border-4 border-slate-200 border-r-transparent animate-spin flex"
+      <div class="w-full flex flex-col gap-4">
+        <Turnstile
+          theme="auto"
+          appearance="execute"
+          :site-key="useRuntimeConfig().public.turnstileSiteKey"
+          :model-value="turnsiteToken"
+          @error="onTurnsiteError"
+          @update:model-value="(event) => (turnsiteToken = event)"
         />
-        <p v-else>{{ contactUs.submitButton || "ارسال" }}</p>
-      </button>
+        <button
+          v-if="!isSuccess && !isError"
+          type="submit"
+          class="w-full flex items-center justify-center sm:w-[calc(50%-1.5rem)] text-white px-4 py-2 rounded-lg mt-4 bg-black transition-colors hover:bg-secondary disabled:bg-slate-500"
+          :disabled="
+            !isVerifiedTurnstile ||
+            isLoading ||
+            !phoneNumber ||
+            !form.email ||
+            !form.companyName ||
+            !form.message
+          "
+        >
+          <span
+            v-if="isLoading"
+            class="size-8 rounded-full border-4 border-slate-200 border-r-transparent animate-spin flex"
+          />
+          <p v-else>{{ contactUs.submitButton || "ارسال" }}</p>
+        </button>
+      </div>
       <button
         v-if="isSuccess"
         type="button"
+        disabled
         class="w-full flex items-center justify-center gap-2.5 sm:w-[calc(50%-1.5rem)] text-white px-4 py-2 rounded-lg mt-4 bg-emerald-700"
       >
         <p class="text-center">
@@ -174,6 +186,7 @@
       <button
         v-if="isError"
         type="button"
+        disabled
         class="w-full flex items-center justify-center gap-2.5 sm:w-[calc(50%-1.5rem)] text-white px-4 py-2 rounded-lg mt-4 bg-red-700"
       >
         <p class="text-center max-w-full truncate overflow-hidden">
@@ -206,6 +219,8 @@
 <script setup lang="ts">
 import { NuxtLink } from "#components";
 import { QUERY_KEYS } from "~/constants/query-keys";
+import Turnstile from "vue-turnstile";
+
 const form = reactive({
   companyName: "",
   email: "",
@@ -223,6 +238,8 @@ const isLoading = ref<boolean>(false);
 const isError = ref<boolean>(false);
 const isSuccess = ref<boolean>(false);
 const errorMsg = ref<string | null>(null);
+const isVerifiedTurnstile = shallowRef<boolean>(false);
+const turnsiteToken = shallowRef<string>("");
 const { currentLocale, getLocaleObject } = useI18n();
 const { $directus } = useNuxtApp();
 const { data } = await useAsyncData(QUERY_KEYS.pages.contactUs, () =>
@@ -290,6 +307,29 @@ watch([isSuccess], () => {
     isSuccess.value = false;
   }, 5000);
 });
+
+watch([turnsiteToken], async () => {
+  if (turnsiteToken.value !== "") {
+    await $fetch("/api/verify-turnstile", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ token: turnsiteToken.value }),
+      onResponse: (res) => {
+        if (res.response.ok) {
+          const isVerified: boolean = res.response._data;
+          isVerifiedTurnstile.value = isVerified;
+        } else {
+          isVerifiedTurnstile.value = false;
+        }
+      },
+    });
+  }
+});
+const onTurnsiteError = (ev) => {
+  console.error("captcha checking error", ev);
+};
 
 const handleSubmit = async () => {
   touched.companyName = false;

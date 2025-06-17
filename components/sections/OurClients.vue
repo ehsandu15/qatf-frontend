@@ -10,19 +10,21 @@
         {{ ourCustomersMapped?.headingTitle }}
       </h2>
     </div>
-    <div ref="emblaRef" class="embla">
-      <div class="embla__container">
-        <div
-          v-for="(customer, index) in ourCustomersMapped.customersList"
-          :key="`${customer.id}-${index}`"
-          class="embla__slide group"
-        >
-          <nuxt-img
-            provider="directus"
-            :src="customer.image"
-            :alt="customer.image"
-            class="object-cover max-w-full grayscale-100 group-hover:grayscale-0 transition-all duration-300"
-          />
+    <div class="embla">
+      <div ref="emblaRef" class="embla__viewport">
+        <div class="embla__container">
+          <div
+            v-for="(customer, index) in ourCustomersMapped.customersList"
+            :key="`${customer.id}-${index}`"
+            class="embla__slide group"
+          >
+            <nuxt-img
+              provider="directus"
+              :src="customer.image"
+              :alt="customer.image"
+              class="object-cover max-w-full grayscale-100 group-hover:grayscale-0 transition-all duration-300"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -36,15 +38,37 @@ import useEmblaCarousel from "embla-carousel-vue";
 import AutoScroll from "embla-carousel-auto-scroll";
 import type { DirectUsTranslations } from "~/types/directus";
 
+const { currentLocale, getLocaleObject } = useI18n();
+
 const { $directus } = useNuxtApp();
 const [emblaRef] = useEmblaCarousel(
   {
     loop: true,
     startIndex: 0,
-    containScroll: "trimSnaps",
     axis: "x",
+    direction: getLocaleObject(currentLocale.value).dir as "ltr" | "rtl",
+    dragFree: true,
+    breakpoints: {
+      365: {
+        slides: "2.5",
+      },
+      768: {
+        slides: "3.5",
+      },
+      992: {
+        slides: "4.5",
+      },
+      1024: {
+        slides: "6.5",
+      },
+    },
   },
-  [AutoScroll()]
+  [
+    AutoScroll({
+      playOnInit: true,
+      speed: 0.3,
+    }),
+  ]
 );
 
 const { data: ourCustomers } = useAsyncData(
@@ -72,7 +96,6 @@ const { data: ourCustomers } = useAsyncData(
 `)
 );
 
-const { getLocaleObject, currentLocale } = useI18n();
 const locale = computed(() => getLocaleObject(currentLocale.value));
 
 const ourCustomersMapped = computed(() => ({
@@ -98,10 +121,10 @@ const ourCustomersMapped = computed(() => ({
 
 <style>
 .embla {
-  max-width: 70%;
+  max-width: 90%;
   margin: auto;
   --slide-height: 19rem;
-  --slide-spacing: 1rem;
+  --slide-spacing: 5rem;
   --slide-size: 10.5rem;
   overflow: hidden;
 }
@@ -117,50 +140,21 @@ const ourCustomersMapped = computed(() => ({
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 80px;
   touch-action: pan-y pinch-zoom;
-  margin-left: calc(var(--slide-spacing) * -1);
+  /* padding-left: calc(var(--slide-spacing) * -1); */
   max-width: 100%;
 }
 .embla__slide {
   transform: translate3d(0, 0, 0);
   flex: 0 0 var(--slide-size);
-  min-width: 0;
-  padding-left: var(--slide-spacing);
+  min-width: 3rem;
+  height: 2.25rem;
+  /* margin-left: var(--slide-spacing); */
 }
-.embla__play {
-  -webkit-tap-highlight-color: rgba(var(--text-high-contrast-rgb-value), 0.5);
-  -webkit-appearance: none;
-  appearance: none;
-  background-color: transparent;
-  touch-action: manipulation;
-  display: inline-flex;
-  text-decoration: none;
-  cursor: pointer;
-  border: 0;
-  padding: 0;
-  margin: 0;
-  box-shadow: inset 0 0 0 0.2rem var(--detail-medium-contrast);
-  border-radius: 1.8rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  justify-self: flex-end;
-  color: var(--text-body);
-  font-weight: 700;
-  font-size: 1.4rem;
-  padding: 0 2.4rem;
-  min-width: 8.4rem;
-}
-
-.embla__progress--hidden .embla__progress__bar {
-  animation-play-state: paused;
-}
-@keyframes autoplay-progress {
-  0% {
-    transform: translate3d(0, 0, 0);
-  }
-  100% {
-    transform: translate3d(100%, 0, 0);
-  }
+.embla__slide img {
+  height: 90%;
+  object-fit: contain;
+  justify-self: center;
 }
 </style>
