@@ -1,19 +1,25 @@
 <template>
   <div
+    ref="sectionRef"
     class="app-container min-h-screen flex flex-col justify-start items-start gap-2 mt-16 pb-8"
   >
     <span class="w-full flex flex-col gap-3">
-      <p
-        class="relative w-fit self-center text-secondary max-md:text-base text-xs font-bold mb-1 before:absolute before:bottom-0 before:left-0 before:w-full before:rounded-full before:h-1/2 before:bg-gradient-to-t px-2 py-1 before:from-secondary/60 isolate"
-      >
-        {{ factorsOfSuccess?.factorsOfSuccessTitle }}
-      </p>
-      <h3
-        ref="targetRef"
-        class="text-black font-bold text-[32px] lg:text-[44px] text-center ltr:leading-tight"
-      >
-        {{ factorsOfSuccess?.factorsOfSuccessDescription }}
-      </h3>
+      <transition name="fade-down" mode="out-in">
+        <p
+          v-show="isInView"
+          class="relative w-fit delay-150 self-center text-secondary max-md:text-base text-xs font-bold mb-1 before:absolute before:bottom-0 before:left-0 before:w-full before:rounded-full before:h-1/2 before:bg-gradient-to-t px-2 py-1 before:from-secondary/60 isolate"
+        >
+          {{ factorsOfSuccess?.factorsOfSuccessTitle }}
+        </p>
+      </transition>
+      <transition name="fade-up" mode="out-in">
+        <h3
+          v-show="isInView"
+          class="delay-200 text-black font-bold text-[32px] lg:text-[44px] text-center ltr:leading-tight"
+        >
+          {{ factorsOfSuccess?.factorsOfSuccessDescription }}
+        </h3>
+      </transition>
     </span>
     <TransitionGroup
       name="fade-up"
@@ -24,7 +30,7 @@
         v-for="(item, index) in factorsOfSuccess.aboutItems"
         v-show="isInView"
         :key="index"
-        class="flex flex-col max-md:flex-col-reverse gap-4 md:gap-2 max-md:order-1 max-md:col-span-2 max-md:h-fit max-md:max-h-96"
+        class="flex flex-col max-md:flex-col-reverse gap-4 delay-400 md:gap-2 max-md:order-1 max-md:col-span-2 max-md:h-fit max-md:max-h-96"
       >
         <span
           class="w-full flex items-center gap-2 flex-col justify-center h-fit md:h-[33%]"
@@ -58,9 +64,9 @@
 <script setup lang="ts">
 import { QUERY_KEYS } from "~/constants/query-keys";
 
-const targetRef = ref<HTMLElement | null>(null);
-const { isInView } = useInView(targetRef, {
-  rootMargin: "360px",
+const sectionRef = ref<HTMLElement | null>(null);
+const { isInView } = useInView(sectionRef, {
+  threshold: 0.3,
 });
 const img = useImage();
 const { $directus } = useNuxtApp();

@@ -1,14 +1,22 @@
 <template>
-  <section class="container app-container pt-16">
+  <section ref="sectionRef" class="container app-container pt-16">
     <div class="flex flex-col items-center justify-center mb-6 w-full">
-      <p
-        class="relative text-secondary max-md:text-base text-xs font-bold mb-1 text-center before:absolute before:bottom-0 before:left-0 before:w-full before:rounded-full before:h-1/2 before:bg-gradient-to-t px-2 py-1 before:from-secondary/60 isolate"
-      >
-        {{ ourCustomersMapped?.title }}
-      </p>
-      <h2 class="text-[32px] md:text-4xl font-bold text-center mb-2">
-        {{ ourCustomersMapped?.headingTitle }}
-      </h2>
+      <transition name="fade-down">
+        <p
+          v-show="isInView"
+          class="relative text-secondary max-md:text-base text-xs font-bold mb-1 text-center before:absolute before:bottom-0 before:left-0 before:w-full before:rounded-full before:h-1/2 before:bg-gradient-to-t px-2 py-1 before:from-secondary/60 isolate"
+        >
+          {{ ourCustomersMapped?.title }}
+        </p>
+      </transition>
+      <transition name="fade-up" mode="out-in">
+        <h2
+          v-show="isInView"
+          class="text-[32px] md:text-4xl font-bold text-center mb-2"
+        >
+          {{ ourCustomersMapped?.headingTitle }}
+        </h2>
+      </transition>
     </div>
 
     <!-- Embla -->
@@ -41,9 +49,12 @@ import AutoScroll from "embla-carousel-auto-scroll";
 import type { DirectUsTranslations } from "~/types/directus";
 
 const { currentLocale, getLocaleObject } = useI18n();
-
+const sectionRef = ref<HTMLElement | null>(null);
+const { isInView } = useInView(sectionRef, {
+  threshold: 0.3,
+});
 const { $directus } = useNuxtApp();
-const [emblaRef] = useEmblaCarousel(
+const [emblaRef, emblaApi] = useEmblaCarousel(
   {
     loop: true,
     axis: "x",
@@ -52,9 +63,8 @@ const [emblaRef] = useEmblaCarousel(
   },
   [
     AutoScroll({
-      playOnInit: true,
-      stopOnInteraction: false,
       speed: 0.7,
+      playOnInit: true,
     }),
   ]
 );
@@ -102,7 +112,7 @@ const ourCustomersMapped = computed(() => ({
 
 <style>
 .embla {
-  max-width: 90%;
+  max-width: 80%;
   margin: auto;
   --slide-height: 19rem;
   --slide-spacing: 5rem;

@@ -30,7 +30,7 @@
       </svg>
     </span>
 
-    <div class="container mx-auto min-h-screen">
+    <div class="container mx-auto">
       <div class="flex flex-col items-center justify-center mb-6 w-full">
         <p
           class="relative text-secondary max-md:text-base text-xs font-bold mb-1 text-center before:absolute before:bottom-0 before:left-0 before:w-full before:rounded-full before:h-1/2 before:bg-gradient-to-t px-2 py-1 before:from-secondary/60 isolate"

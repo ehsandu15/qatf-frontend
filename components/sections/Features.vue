@@ -1,5 +1,7 @@
 <template>
-  <div class="app-container flex flex-col gap-5 mt-10">
+  <div
+    class="md:min-h-[70dvh] min-h-[90dvh] app-container flex flex-col gap-5 mt-10"
+  >
     <figure ref="targetRef" class="w-full h-96 rounded-[20px] overflow-hidden">
       <NuxtImg
         provider="directus"
@@ -12,7 +14,7 @@
       <TransitionGroup
         tag="ul"
         name="scale-enter"
-        class="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 min-h-[180px]"
+        class="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
       >
         <li
           v-for="(stat, idx) of features?.servicesList"

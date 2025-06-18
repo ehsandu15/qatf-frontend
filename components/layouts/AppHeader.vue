@@ -117,54 +117,54 @@
       </div>
 
       <!-- mobile nav menu -->
-      <div
-        class="fixed top-17 left-0 z-[600] bg-background w-full min-h-screen flex items-start justify-start pt-8 transition-transform"
-        :class="isOpenMenu ? 'translate-x-0' : 'translate-x-[150%]'"
-      >
-        <nav class="w-full grid grid-flow-row h-full gap-2 min-h-full">
-          <template v-for="link of appHeader.websiteLinks" :key="link.id">
-            <NuxtLink
-              v-if="link.path && !link.path.match(/^\[.*\]$/)"
-              :to="pathWithLocale(link.path)"
-              class="header__nav_link"
-              :class="
-                $route.path.endsWith(link.path) ? 'header__nav_link_active' : ''
-              "
-            >
-              <p class="w-full text-start" @click="isOpenMenu = false">
-                {{ link.title }}
-              </p>
-            </NuxtLink>
-            <button
-              v-if="!link.path || link.path.match(/^\[.*\]$/)"
-              type="button"
-              class="py-1.5 px-3 text-start capitalize"
-              @click="handleShowCartModal"
-            >
-              {{ link.title }}
-            </button>
-          </template>
-          <div
-            class="w-full flex flex-row items-center justify-start gap-2 border border-transparent focus-within:bg-primary/20 focus-within:border-gray-300 px-2"
-          >
-            <select
-              :value="currentLocale"
-              class="focus:outline-none ltr:ps-2 rtl:pe-2 py-1 text-sm w-1/4"
-              @change="setLocale($event?.target?.value)"
-            >
-              <option
-                v-for="locale in locales"
-                :key="locale.code"
-                :value="locale.code"
-              >
-                {{ locale.name }}
-              </option>
-            </select>
-          </div>
-        </nav>
-      </div>
     </div>
   </header>
+  <div
+    class="fixed top-17 left-0 z-[100] bg-background w-full min-h-screen flex items-start justify-start pt-8 transition-transform"
+    :class="isOpenMenu ? 'translate-x-0' : 'translate-x-[150%]'"
+  >
+    <nav class="w-full grid grid-flow-row h-full gap-2 min-h-full">
+      <template v-for="link of appHeader.websiteLinks" :key="link.id">
+        <NuxtLink
+          v-if="link.path && !link.path.match(/^\[.*\]$/)"
+          :to="pathWithLocale(link.path)"
+          class="header__nav_link"
+          :class="
+            $route.path.endsWith(link.path) ? 'header__nav_link_active' : ''
+          "
+        >
+          <p class="w-full text-start" @click="isOpenMenu = false">
+            {{ link.title }}
+          </p>
+        </NuxtLink>
+        <button
+          v-if="!link.path || link.path.match(/^\[.*\]$/)"
+          type="button"
+          class="py-1.5 px-3 text-start capitalize"
+          @click="handleShowCartModal"
+        >
+          {{ link.title }}
+        </button>
+      </template>
+      <div
+        class="w-full flex flex-row items-center justify-start gap-2 border border-transparent focus-within:bg-primary/20 focus-within:border-gray-300 px-2"
+      >
+        <select
+          :value="currentLocale"
+          class="focus:outline-none ltr:ps-2 rtl:pe-2 py-1 text-sm w-1/4"
+          @change="setLocale($event?.target?.value)"
+        >
+          <option
+            v-for="locale in locales"
+            :key="locale.code"
+            :value="locale.code"
+          >
+            {{ locale.name }}
+          </option>
+        </select>
+      </div>
+    </nav>
+  </div>
 </template>
 <script setup lang="ts">
 import { QUERY_KEYS } from "~/constants/query-keys";
@@ -247,5 +247,12 @@ const appHeader = computed(() => {
       })
     ),
   };
+});
+
+// prevent scroll on body when menu is open based in ( isOpenMenu )
+useHead({
+  bodyAttrs: {
+    class: () => (isOpenMenu.value ? "overflow-hidden" : ""),
+  },
 });
 </script>

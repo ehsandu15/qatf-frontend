@@ -1,8 +1,9 @@
 <template>
   <section
-    class="flex flex-col items-center justify-start container app-container pt-2 gap-2.5"
+    class="min-h-[50dvh] flex flex-col items-center justify-start container app-container pt-2 gap-2.5"
   >
     <div
+      ref="targetRef"
       class="grid grid-cols-1 md:grid-cols-2 gap-10 tablet:gap-20 items-center justify-start"
     >
       <ul class="grid grid-cols-2 items-start justify-start gap-3 tablet:gap-5">
@@ -51,20 +52,30 @@
         </div>
       </ul>
       <div class="flex flex-col items-start justify-start gap-2 tablet:gap-1.5">
-        <p
-          class="relative text-secondary max-md:text-base text-xs font-bold mb-1 text-start before:absolute before:bottom-0 before:left-0 before:w-full before:rounded-full before:h-1/2 before:bg-gradient-to-t px-2 py-1 before:from-secondary/60 isolate"
-        >
-          {{ ourGoalsMapped.title }}
-        </p>
-        <h3 class="text-3xl md:text-4xl text-start font-bold">
-          {{ ourGoalsMapped.headingTitle }}
-        </h3>
-        <p
-          ref="targetRef"
-          class="text-start text-sm md:text-base text-black/70 mt-6"
-        >
-          {{ ourGoalsMapped.description }}
-        </p>
+        <transition name="fade-down" mode="out-in">
+          <p
+            v-show="isInView"
+            class="relative text-secondary max-md:text-base text-xs font-bold mb-1 text-start before:absolute before:bottom-0 before:left-0 before:w-full before:rounded-full before:h-1/2 before:bg-gradient-to-t px-2 py-1 before:from-secondary/60 isolate"
+          >
+            {{ ourGoalsMapped.title }}
+          </p>
+        </transition>
+        <transition name="fade-down" mode="out-in">
+          <h3
+            v-show="isInView"
+            class="text-3xl md:text-4xl text-start font-bold"
+          >
+            {{ ourGoalsMapped.headingTitle }}
+          </h3>
+        </transition>
+        <transition name="fade-up" mode="out-in">
+          <p
+            v-show="isInView"
+            class="text-start text-sm md:text-base text-black/70 mt-6"
+          >
+            {{ ourGoalsMapped.description }}
+          </p>
+        </transition>
       </div>
     </div>
   </section>
@@ -100,7 +111,7 @@ const locale = computed(() => getLocaleObject(currentLocale.value));
 const ourGoalsMapped = computed(() => ({
   ...ourGoals.value?.out_goals,
   ...ourGoals.value?.out_goals.translations.find(
-    (translation: any) =>
+    (translation: unknown) =>
       translation.languages_id.toString() === locale.value.id
   ),
 }));

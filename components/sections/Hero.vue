@@ -1,19 +1,10 @@
 <template>
   <section
     ref="elementRef"
-    class="relative flex flex-col items-center justify-center bg-cover bg-center bg-fixed text-white py-40 min-h-dvh transition-transform duration-[1500ms] ease-in-out overflow-hidden"
+    class="relative flex flex-col items-center justify-center bg-cover bg-center bg-fixed text-white py-16 md:py-40 min-h-dvh transition-transform duration-[1500ms] ease-in-out overflow-hidden"
     :class="isInView ? 'scale-100 translate-y-0' : 'scale-105 translate-y-6'"
     :style="{ 'background-image': `url(${heroImage})` }"
   >
-    <video
-      src="/videos/13795287_640_360_60fps.mp4"
-      autoplay
-      muted
-      loop
-      playsinline
-      preload
-      class="absolute inset-0 w-full h-full object-cover"
-    />
     <div class="absolute inset-0 bg-black/60" />
     <div
       class="app-container relative z-10 text-center flex flex-col items-center"
@@ -118,7 +109,8 @@ const headingTitleElem = computed(() =>
       : h(
           "p",
           {
-            class: "md:text-5xl text-[44px] md:ltr:text-[44px]/6 font-bold",
+            class:
+              "md:text-5xl text-[40px] leading-10 md:ltr:text-[44px]/6 font-bold",
           },
           part
         )

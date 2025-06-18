@@ -1,25 +1,36 @@
 <template>
   <section
-    class="flex flex-col items-center justify-start container app-container pt-16 gap-2.5"
+    class="min-h-[50dvh] flex flex-col items-center justify-start container app-container pt-16 gap-2.5"
   >
     <div
+      ref="sectionRef"
       class="grid grid-cols-1 md:grid-cols-2 gap-10 tablet:gap-20 items-center justify-start"
     >
       <div class="flex flex-col items-start justify-start gap-1.5">
-        <p
-          class="relative text-primary max-md:text-base text-xs font-bold mb-1 text-start before:absolute before:bottom-0 before:left-0 before:w-full before:rounded-full before:h-1/2 before:bg-gradient-to-t px-2 py-1 before:from-primary/60 isolate"
-        >
-          {{ ourVisionMapped.title }}
-        </p>
-        <h3 class="text-3xl md:text-4xl text-start font-bold">
-          {{ ourVisionMapped.headingTitle }}
-        </h3>
-        <p
-          ref="targetRef"
-          class="text-start text-sm md:text-base text-black/70 mt-6"
-        >
-          {{ ourVisionMapped.description }}
-        </p>
+        <transition name="fade-down" mode="out-in">
+          <p
+            v-show="isInView"
+            class="relative text-primary max-md:text-base text-xs font-bold mb-1 text-start before:absolute before:bottom-0 before:left-0 before:w-full before:rounded-full before:h-1/2 before:bg-gradient-to-t px-2 py-1 before:from-primary/60 isolate"
+          >
+            {{ ourVisionMapped.title }}
+          </p>
+        </transition>
+        <transition name="fade-down" mode="out-in">
+          <h3
+            v-show="isInView"
+            class="text-3xl md:text-4xl text-start font-bold"
+          >
+            {{ ourVisionMapped.headingTitle }}
+          </h3>
+        </transition>
+        <transition name="fade-up" mode="out-in">
+          <p
+            v-show="isInView"
+            class="text-start text-sm md:text-base text-black/70 mt-6"
+          >
+            {{ ourVisionMapped.description }}
+          </p>
+        </transition>
       </div>
       <ul class="grid grid-cols-2 items-start justify-start gap-3 tablet:gap-5">
         <transition name="fade-up" mode="out-in">
@@ -97,8 +108,10 @@
 import { QUERY_KEYS } from "~/constants/query-keys";
 
 const { $directus } = useNuxtApp();
-const targetRef = ref<HTMLElement | null>(null);
-const { isInView } = useInView(targetRef);
+const sectionRef = ref<HTMLElement | null>(null);
+const { isInView } = useInView(sectionRef, {
+  threshold: 0.3,
+});
 const { data: ourVision } = useAsyncData(QUERY_KEYS.pages.home.ourVision, () =>
   $directus.query(`
     query {
@@ -125,7 +138,7 @@ const locale = computed(() => getLocaleObject(currentLocale.value));
 const ourVisionMapped = computed(() => ({
   ...ourVision.value?.our_vision,
   ...ourVision.value?.our_vision.translations.find(
-    (translation: any) =>
+    (translation: unknown) =>
       translation.languages_id.toString() === locale.value.id
   ),
 }));

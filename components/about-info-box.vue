@@ -15,7 +15,7 @@
             v-if="isInView"
             :src="personImage"
             alt="about-us-image"
-            class="max-w-[260px] max-h-[512px] max-tablet:max-h-[52%] absolute right-0 bottom-0 inline-block drop-shadow-2xl"
+            class="max-w-[260px] max-h-[512px] max-tablet:max-h-[52%] absolute rtl:right-0 bottom-0 inline-block drop-shadow-2xl"
           />
         </Transition>
       </figure>
