@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="relative overflow-hidden">
     <sections-hero />
     <sections-why-choose-us />
     <lazy-sections-about-us />

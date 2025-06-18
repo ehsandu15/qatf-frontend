@@ -3,69 +3,73 @@
     class="bg-primary text-white bg-fixed bg-cover bg-no-repeat bg-center"
     :style="{ backgroundImage: `url(${backgroundImage})` }"
   >
-    <div class="bg-primary/80 flex items-center justify-center pt-10 flex-col">
+    <div class="bg-primary/80 flex items-center justify-center flex-col">
       <!-- Main Footer Content -->
       <div
-        class="app-container w-full flex items-start justify-between max-md:gap-7 gap-20 border-white/30 max-lg:flex-wrap"
+        class="w-full flex items-start md:items-center justify-between max-md:gap-7 gap-20 border-white/30 max-lg:flex-wrap"
       >
         <!-- Description & Logo -->
         <div
-          class="flex flex-col items-start md:col-span-2 space-y-4 text-right w-full md:w-1/3"
+          class="md:container md:mx-auto md:app-container max-md:bg-primary py-10 flex flex-col md:flex-row items-center justify-between"
         >
-          <NuxtImg
-            provider="directus"
-            :src="`${data?.appFooter?.logoImage}`"
-            alt="Qatf Farm Logo White"
-            class="h-15 mb-4"
-          />
-          <p class="text-sm text-start leading-relaxed">
-            {{ appFooter.description }}
-          </p>
-          <!-- Social Media Icons -->
           <div
-            v-if="data?.appFooter.socialMedia"
-            class="w-full flex justify-start gap-4 pt-4 max-md:w-full max-md:justify-center"
+            class="app-container flex flex-col items-start md:col-span-2 space-y-4 text-right w-full md:w-1/3"
           >
-            <a
-              v-for="platform of appFooter.socialMedia"
-              :key="platform.id"
-              :href="platform.platformUrl"
-              :aria-label="platform.platformUrl"
-              class="hover:opacity-80 size-12 bg-primary/50 rounded-full"
+            <NuxtImg
+              provider="directus"
+              :src="`${data?.appFooter?.logoImage}`"
+              alt="Qatf Farm Logo White"
+              class="h-15 mb-4"
+            />
+            <p class="text-sm opacity-80 text-start leading-relaxed">
+              {{ appFooter.description }}
+            </p>
+            <!-- Social Media Icons -->
+            <div
+              v-if="data?.appFooter.socialMedia"
+              class="w-full flex justify-start gap-4 pt-4 max-md:w-full"
             >
-              <NuxtImg
-                provider="directus"
-                :src="`${platform.icon}`"
-                :alt="platform.id"
-                class="w-full"
-              />
-            </a>
+              <a
+                v-for="platform of appFooter.socialMedia"
+                :key="platform.id"
+                :href="platform.platformUrl"
+                :aria-label="platform.platformUrl"
+                class="hover:opacity-80 size-12 bg-primary/50 rounded-full"
+              >
+                <NuxtImg
+                  provider="directus"
+                  :src="`${platform.icon}`"
+                  :alt="platform.id"
+                  class="w-full"
+                />
+              </a>
+            </div>
           </div>
-        </div>
-        <!-- Navigation Links -->
-        <nav
-          v-if="appFooter.websiteLinks"
-          class="w-full md:w-1/2 flex flex-wrap gap-x-6 gapy-3 items-center justify-center h-fit self-center"
-        >
-          <template v-for="link of appFooter.websiteLinks" :key="link.id">
-            <NuxtLink
-              v-if="link.path && !link.path.match(/^\[.*\]$/)"
-              :to="pathWithLocale(link.path)"
-              class="block hover:underline"
-              >{{ link.title }}</NuxtLink
-            >
-            <button
-              v-if="!link.path || link.path.match(/^\[.*\]$/)"
-              type="button"
-              @click="showModal"
-            >
-              {{ link.title }}
-            </button>
-          </template>
-        </nav>
+          <!-- Navigation Links -->
+          <nav
+            v-if="appFooter.websiteLinks"
+            class="app-container md:w-1/2 flex flex-wrap gap-x-6 gapy-3 items-center justify-center h-fit self-center max-md:pt-10 font-semibold"
+          >
+            <template v-for="link of appFooter.websiteLinks" :key="link.id">
+              <NuxtLink
+                v-if="link.path && !link.path.match(/^\[.*\]$/)"
+                :to="pathWithLocale(link.path)"
+                class="block hover:underline"
+                >{{ link.title }}</NuxtLink
+              >
+              <button
+                v-if="!link.path || link.path.match(/^\[.*\]$/)"
+                type="button"
+                @click="showModal"
+              >
+                {{ link.title }}
+              </button>
+            </template>
+          </nav>
 
-        <!-- Contact Info -->
-        <div class="w-full md:w-1/3 space-y-4">
+          <!-- Contact Info -->
+        </div>
+        <div class="app-container w-full md:w-1/3 space-y-4 max-md:py-6">
           <h3 class="text-xl font-semibold mb-4">
             {{ appFooter.headingTitle }}
           </h3>

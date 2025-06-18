@@ -14,42 +14,56 @@
         <h3 class="text-3xl md:text-4xl text-start font-bold">
           {{ ourVisionMapped.headingTitle }}
         </h3>
-        <p class="text-start text-sm md:text-base text-black/70 mt-6">
+        <p
+          ref="targetRef"
+          class="text-start text-sm md:text-base text-black/70 mt-6"
+        >
           {{ ourVisionMapped.description }}
         </p>
       </div>
       <ul class="grid grid-cols-2 items-start justify-start gap-3 tablet:gap-5">
-        <li class="w-full h-44 rounded-lg overflow-hidden">
-          <nuxt-img
-            provider="directus"
-            :src="ourVisionMapped.firstImage"
-            class="w-full h-full object-cover"
-          />
-        </li>
-        <li class="w-full h-44 rounded-lg overflow-hidden">
-          <nuxt-img
-            provider="directus"
-            :src="ourVisionMapped.secondImage"
-            class="w-full h-full object-cover"
-          />
-        </li>
+        <transition name="fade-up" mode="out-in">
+          <li v-show="isInView" class="w-full h-44 rounded-lg overflow-hidden">
+            <nuxt-img
+              provider="directus"
+              :src="ourVisionMapped.firstImage"
+              class="w-full h-full object-cover"
+            />
+          </li>
+        </transition>
+        <transition name="fade-down" mode="out-in">
+          <li v-show="isInView" class="w-full h-44 rounded-lg overflow-hidden">
+            <nuxt-img
+              provider="directus"
+              :src="ourVisionMapped.secondImage"
+              class="w-full h-full object-cover"
+            />
+          </li>
+        </transition>
         <div
           class="col-span-2 flex items-start justify-start gap-3 tablet:gap-5"
         >
-          <li class="w-full h-44 rounded-lg overflow-hidden">
-            <nuxt-img
-              provider="directus"
-              :src="ourVisionMapped.thirdImage"
-              class="w-full h-full object-cover"
-            />
-          </li>
-          <li class="w-60 h-44 rounded-lg overflow-hidden">
-            <nuxt-img
-              provider="directus"
-              :src="ourVisionMapped.forthImage"
-              class="w-full h-full object-cover"
-            />
-          </li>
+          <transition name="fade-down" mode="out-in">
+            <li
+              v-show="isInView"
+              class="w-full h-44 rounded-lg overflow-hidden"
+            >
+              <nuxt-img
+                provider="directus"
+                :src="ourVisionMapped.thirdImage"
+                class="w-full h-full object-cover"
+              />
+            </li>
+          </transition>
+          <transition name="fade-up" mode="out-in">
+            <li v-show="isInView" class="w-60 h-44 rounded-lg overflow-hidden">
+              <nuxt-img
+                provider="directus"
+                :src="ourVisionMapped.forthImage"
+                class="w-full h-full object-cover"
+              />
+            </li>
+          </transition>
         </div>
       </ul>
     </div>
@@ -83,6 +97,8 @@
 import { QUERY_KEYS } from "~/constants/query-keys";
 
 const { $directus } = useNuxtApp();
+const targetRef = ref<HTMLElement | null>(null);
+const { isInView } = useInView(targetRef);
 const { data: ourVision } = useAsyncData(QUERY_KEYS.pages.home.ourVision, () =>
   $directus.query(`
     query {

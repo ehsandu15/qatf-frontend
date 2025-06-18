@@ -16,8 +16,20 @@
         {{ about?.aboutUsBrief }}
       </h4>
     </span>
-
-    <div class="w-full relative">
+    <about-info-box
+      :description="about?.aboutUsHeadingDescription"
+      :person-image="
+        img(about?.aboutUsPersonImage, undefined, {
+          provider: 'directus',
+        })
+      "
+      :background="
+        img(about?.aboutUsSectionImage, undefined, {
+          provider: 'directus',
+        })
+      "
+    />
+    <!-- <div class="w-full relative">
       <figure
         class="w-full h-[80dvh] tablet:h-96 overflow-hidden rounded-2xl bg-no-repeat bg-cover bg-center"
         :style="{
@@ -25,15 +37,12 @@
         }"
       >
         <div
-          class="absolute inset-0 flex items-center justify-start max-tablet:flex-col gap-5 bg-neutral-700/40 rounded-2xl tablet:py-20 tablet:pe-10 p-6"
+          class="absolute inset-0 h-[80dvh] tablet:h-96 flex items-center justify-start max-tablet:flex-col gap-5 bg-neutral-700/40 rounded-2xl tablet:py-20 tablet:pe-10 p-6"
         >
-          <div
-            class="absolute bottom-0 max-tablet:bottom-0 rtl:tablet:-right-3 ltr:tablet:-left-3 max-tablet:w-full max-w-full max-h-1/2 tablet:max-w-[30%]"
-          >
+          <div class="">
             <NuxtImg
               :src="about?.aboutUsPersonImage"
               :alt="about?.aboutUsTitle"
-              class="max-w-1/2 tablet:max-w-full object-cover rounded-2xl"
             />
           </div>
           <p
@@ -43,7 +52,7 @@
           </p>
         </div>
       </figure>
-    </div>
+    </div> -->
   </div>
 </template>
 <script setup lang="ts">
@@ -76,20 +85,20 @@ const img = useImage();
 const about = computed(() => {
   return {
     ...aboutData.value?.home,
-    aboutUsSectionImage: img(
-      aboutData.value?.home?.aboutUsSectionImage,
-      undefined,
-      {
-        provider: "directus",
-      }
-    ),
-    aboutUsPersonImage: img(
-      aboutData.value?.home?.aboutUsPersonImage,
-      undefined,
-      {
-        provider: "directus",
-      }
-    ),
+    // aboutUsSectionImage: img(
+    //   aboutData.value?.home?.aboutUsSectionImage,
+    //   undefined,
+    //   {
+    //     provider: "directus",
+    //   }
+    // ),
+    // aboutUsPersonImage: img(
+    //   aboutData.value?.home?.aboutUsPersonImage,
+    //   undefined,
+    //   {
+    //     provider: "directus",
+    //   }
+    // ),
     ...aboutData.value?.home?.translations.find(
       (t: {
         languages_id: number;

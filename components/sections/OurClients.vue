@@ -10,6 +10,8 @@
         {{ ourCustomersMapped?.headingTitle }}
       </h2>
     </div>
+
+    <!-- Embla -->
     <div class="embla">
       <div ref="emblaRef" class="embla__viewport">
         <div class="embla__container">
@@ -44,29 +46,15 @@ const { $directus } = useNuxtApp();
 const [emblaRef] = useEmblaCarousel(
   {
     loop: true,
-    startIndex: 0,
     axis: "x",
-    direction: getLocaleObject(currentLocale.value).dir as "ltr" | "rtl",
-    dragFree: true,
-    breakpoints: {
-      365: {
-        slides: "2.5",
-      },
-      768: {
-        slides: "3.5",
-      },
-      992: {
-        slides: "4.5",
-      },
-      1024: {
-        slides: "6.5",
-      },
-    },
+    align: "end",
+    direction: "ltr",
   },
   [
     AutoScroll({
       playOnInit: true,
-      speed: 0.3,
+      stopOnInteraction: false,
+      speed: 0.7,
     }),
   ]
 );
@@ -110,13 +98,6 @@ const ourCustomersMapped = computed(() => ({
     ),
   },
 }));
-
-// onMounted(() => {
-//   const autoScroll = emblaApi.value?.plugins().autoScroll;
-//   if (!autoScroll) return;
-
-//   autoScroll.play();
-// });
 </script>
 
 <style>
@@ -146,9 +127,8 @@ const ourCustomersMapped = computed(() => ({
   max-width: 100%;
 }
 .embla__slide {
-  transform: translate3d(0, 0, 0);
   flex: 0 0 var(--slide-size);
-  min-width: 3rem;
+  min-width: 3.25rem;
   height: 2.25rem;
   /* margin-left: var(--slide-spacing); */
 }

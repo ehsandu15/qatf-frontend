@@ -19,37 +19,19 @@
         </h4>
       </span>
 
-      <div class="w-full relative">
-        <!-- about-us hero image -->
-        <figure
-          class="w-full h-[80dvh] tablet:h-[380px] overflow-hidden rounded-2xl bg-no-repeat bg-cover bg-center"
-          :style="{
-            backgroundImage: `url(${img(aboutUs?.image, undefined, {
-              provider: 'directus',
-            })})`,
-          }"
-        >
-          <div
-            class="absolute inset-0 flex items-center justify-start max-tablet:flex-col gap-5 bg-neutral-700/40 rounded-2xl tablet:py-20 tablet:pe-10 p-6"
-          >
-            <div
-              class="absolute bottom-0 max-tablet:bottom-0 rtl:tablet:-right-3 ltr:tablet:-left-3 max-tablet:w-full max-w-full max-h-1/2 tablet:max-w-[30%]"
-            >
-              <NuxtImg
-                provider="directus"
-                :src="aboutUs?.personImage"
-                :alt="aboutUs?.aboutUsTitle"
-                class="max-w-1/2 tablet:max-w-full object-cover rounded-2xl"
-              />
-            </div>
-            <p
-              class="text-white text-base tablet:text-xl lg:text-2xl font-semibold text-center w-full max-md:max-h-1/2 tablet:max-w-[70%] ms-auto"
-            >
-              {{ aboutUs?.descriptionText }}
-            </p>
-          </div>
-        </figure>
-      </div>
+      <about-info-box
+        :description="aboutUs?.descriptionText"
+        :person-image="
+          img(aboutUs?.personImage, undefined, {
+            provider: 'directus',
+          })
+        "
+        :background="
+          img(aboutUs?.image, undefined, {
+            provider: 'directus',
+          })
+        "
+      />
 
       <!-- about-us features box's -->
       <div

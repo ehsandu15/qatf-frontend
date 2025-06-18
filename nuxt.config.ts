@@ -12,6 +12,7 @@ export default defineNuxtConfig({
   plugins: [{ src: "~/plugins/directus.ts", mode: "all" }],
   css: ["~/assets/css/main.css"],
   app: {
+    pageTransition: { name: "page", mode: "out-in" },
     head: {
       htmlAttrs: {
         lang: "ar",

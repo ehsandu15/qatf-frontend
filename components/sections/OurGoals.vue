@@ -6,37 +6,48 @@
       class="grid grid-cols-1 md:grid-cols-2 gap-10 tablet:gap-20 items-center justify-start"
     >
       <ul class="grid grid-cols-2 items-start justify-start gap-3 tablet:gap-5">
-        <li class="w-full h-44 rounded-lg overflow-hidden">
-          <nuxt-img
-            provider="directus"
-            :src="ourGoalsMapped.firstImage"
-            class="w-full h-full object-cover"
-          />
-        </li>
-        <li class="w-full h-44 rounded-lg overflow-hidden">
-          <nuxt-img
-            provider="directus"
-            :src="ourGoalsMapped.secondImage"
-            class="w-full h-full object-cover"
-          />
-        </li>
+        <transition name="fade-up">
+          <li v-show="isInView" class="w-full h-44 rounded-lg overflow-hidden">
+            <nuxt-img
+              provider="directus"
+              :src="ourGoalsMapped.firstImage"
+              class="w-full h-full object-cover"
+            />
+          </li>
+        </transition>
+        <transition name="fade-down">
+          <li v-show="isInView" class="w-full h-44 rounded-lg overflow-hidden">
+            <nuxt-img
+              provider="directus"
+              :src="ourGoalsMapped.secondImage"
+              class="w-full h-full object-cover"
+            />
+          </li>
+        </transition>
         <div
           class="col-span-2 flex items-start justify-start gap-3 tablet:gap-5"
         >
-          <li class="w-60 h-44 rounded-lg overflow-hidden">
-            <nuxt-img
-              provider="directus"
-              :src="ourGoalsMapped.thirdImage"
-              class="w-full h-full object-cover"
-            />
-          </li>
-          <li class="w-full h-44 rounded-lg overflow-hidden">
-            <nuxt-img
-              provider="directus"
-              :src="ourGoalsMapped.forthImage"
-              class="w-full h-full object-cover"
-            />
-          </li>
+          <transition name="fade-up">
+            <li v-show="isInView" class="w-60 h-44 rounded-lg overflow-hidden">
+              <nuxt-img
+                provider="directus"
+                :src="ourGoalsMapped.thirdImage"
+                class="w-full h-full object-cover"
+              />
+            </li>
+          </transition>
+          <transition name="fade-down">
+            <li
+              v-show="isInView"
+              class="w-full h-44 rounded-lg overflow-hidden"
+            >
+              <nuxt-img
+                provider="directus"
+                :src="ourGoalsMapped.forthImage"
+                class="w-full h-full object-cover"
+              />
+            </li>
+          </transition>
         </div>
       </ul>
       <div class="flex flex-col items-start justify-start gap-2 tablet:gap-1.5">
@@ -48,7 +59,10 @@
         <h3 class="text-3xl md:text-4xl text-start font-bold">
           {{ ourGoalsMapped.headingTitle }}
         </h3>
-        <p class="text-start text-sm md:text-base text-black/70 mt-6">
+        <p
+          ref="targetRef"
+          class="text-start text-sm md:text-base text-black/70 mt-6"
+        >
           {{ ourGoalsMapped.description }}
         </p>
       </div>
@@ -57,7 +71,8 @@
 </template>
 <script setup lang="ts">
 import { QUERY_KEYS } from "~/constants/query-keys";
-
+const targetRef = ref<HTMLElement | null>(null);
+const { isInView } = useInView(targetRef);
 const { $directus } = useNuxtApp();
 const { data: ourGoals } = useAsyncData(QUERY_KEYS.pages.home.ourGoals, () =>
   $directus.query(`

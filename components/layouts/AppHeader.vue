@@ -1,5 +1,5 @@
 <template>
-  <header class="relative bg-background border-b border-gray-200">
+  <header class="relative isolate bg-background border-b border-gray-200">
     <div
       class="app-container flex items-center justify-between py-2 max-tablet:flex-row-reverse"
     >

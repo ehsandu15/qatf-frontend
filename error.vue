@@ -14,10 +14,10 @@
     class="relative w-full flex flex-col items-center justify-start bg-fixed bg-center bg-repeat"
   >
     <span
-      class="inline-block absolute w-full h-full top-0 left-0 bg-black/50 z-10"
+      class="inline-block absolute w-full h-full top-0 left-0 bg-black/60 z-10"
     />
     <div
-      class="app-container flex flex-col items-start justify-center h-full mt-24 z-10"
+      class="container app-container flex flex-col items-start justify-center h-full mt-16 z-10"
     >
       <template v-if="error?.statusCode === 404">
         <figure
@@ -91,20 +91,38 @@
           </defs>
         </svg>
       </template>
-      <span class="flex flex-col items-start justify-start gap-3 mt-8">
-        <h2 class="text-5xl font-semibold text-white">
-          {{
-            errorContent?.error?.notFoundedErrorMessage ||
-            " عذراً, الصفحة غير موجودة أو حصل خطأ ما"
-          }}
-        </h2>
-        <p class="font-semibold text-white/80">
-          {{
-            errorContent?.error?.notFoundedErrorDescription ||
-            " الصفحة التي تبحث عنها غير متاحة أو حُذفت. حاول الانتقال إلى الصفحة الرئيسية باستخدام الزر أدناه."
-          }}
-        </p>
-      </span>
+      <template v-if="error?.statusCode === 404">
+        <span class="flex flex-col items-start justify-start gap-3 mt-8">
+          <h2 class="text-5xl font-semibold text-white">
+            {{
+              errorContent?.error?.notFoundedErrorMessage ||
+              " عذراً, الصفحة غير موجودة"
+            }}
+          </h2>
+          <p class="font-semibold text-white/80">
+            {{
+              errorContent?.error?.notFoundedErrorDescription ||
+              " الصفحة التي تبحث عنها غير متاحة أو حُذفت. حاول الانتقال إلى الصفحة الرئيسية باستخدام الزر أدناه."
+            }}
+          </p>
+        </span>
+      </template>
+      <template v-else>
+        <span class="flex flex-col items-start justify-start gap-3 mt-8">
+          <h2 class="text-5xl font-semibold text-white">
+            {{
+              errorContent?.error?.internalErrorMessage ||
+              " لقد حدث حظأ ما في التطبيق"
+            }}
+          </h2>
+          <p class="font-semibold text-white/80">
+            {{
+              errorContent?.error?.internalErrorDescription ||
+              "لقد حدث خطأ غير متوقع اثناء عمل التطبيق مما ادي الي توقفه نحن في صدد اصلاح هذا"
+            }}
+          </p>
+        </span>
+      </template>
       <NuxtLink
         :href="errorContent?.error?.buttonHref || '/'"
         class="bg-secondary px-8 ltr:flex-row-reverse flex items-center justify-center gap-2 py-3 rounded-full text-white mt-10"
@@ -127,7 +145,7 @@
     </div>
     <div
       v-if="error?.statusCode !== 404"
-      class="text-white z-10 app-container overflow-x-auto mb-2"
+      class="text-white z-10 app-container container h-[512px] overflow-x-auto mb-2"
     >
       <h3 class="text-xl font-bold mb-5">{{ error?.cause }}</h3>
       <pre>

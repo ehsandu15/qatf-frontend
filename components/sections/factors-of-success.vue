@@ -1,6 +1,6 @@
 <template>
   <div
-    class="app-container flex flex-col justify-start items-start gap-2 mt-16 pb-8"
+    class="app-container min-h-screen flex flex-col justify-start items-start gap-2 mt-16 pb-8"
   >
     <span class="w-full flex flex-col gap-3">
       <p
@@ -9,16 +9,20 @@
         {{ factorsOfSuccess?.factorsOfSuccessTitle }}
       </p>
       <h3
+        ref="targetRef"
         class="text-black font-bold text-[32px] lg:text-[44px] text-center ltr:leading-tight"
       >
         {{ factorsOfSuccess?.factorsOfSuccessDescription }}
       </h3>
     </span>
-    <ul
-      class="mt-8 grid grid-cols-2 md:grid-cols-3 gap-6 md:[&>:nth-child(odd)]:flex-col-reverse"
+    <TransitionGroup
+      name="fade-up"
+      tag="ul"
+      class="mt-8 [&>:nth-child(even)]:!delay-300 [&>:nth-child(odd)]:!delay-100 grid grid-cols-2 md:grid-cols-3 gap-6 md:[&>:nth-child(odd)]:flex-col-reverse"
     >
       <li
         v-for="(item, index) in factorsOfSuccess.aboutItems"
+        v-show="isInView"
         :key="index"
         class="flex flex-col max-md:flex-col-reverse gap-4 md:gap-2 max-md:order-1 max-md:col-span-2 max-md:h-fit max-md:max-h-96"
       >
@@ -48,12 +52,16 @@
           />
         </span>
       </li>
-    </ul>
+    </TransitionGroup>
   </div>
 </template>
 <script setup lang="ts">
 import { QUERY_KEYS } from "~/constants/query-keys";
 
+const targetRef = ref<HTMLElement | null>(null);
+const { isInView } = useInView(targetRef, {
+  rootMargin: "360px",
+});
 const img = useImage();
 const { $directus } = useNuxtApp();
 const { currentLocale, getLocaleObject } = useI18n();

@@ -1,9 +1,11 @@
 <template>
   <section
-    class="relative bg-cover bg-center bg-fixed text-white py-40 min-h-dvh"
+    ref="elementRef"
+    class="relative flex flex-col items-center justify-center bg-cover bg-center bg-fixed text-white py-40 min-h-dvh transition-transform duration-[1500ms] ease-in-out overflow-hidden"
+    :class="isInView ? 'scale-100 translate-y-0' : 'scale-105 translate-y-6'"
     :style="{ 'background-image': `url(${heroImage})` }"
   >
-    <!-- <video
+    <video
       src="/videos/13795287_640_360_60fps.mp4"
       autoplay
       muted
@@ -11,38 +13,53 @@
       playsinline
       preload
       class="absolute inset-0 w-full h-full object-cover"
-    /> -->
+    />
     <div class="absolute inset-0 bg-black/60" />
     <div
       class="app-container relative z-10 text-center flex flex-col items-center"
     >
-      <span
-        class="tablet:max-w-[70%] tablet:ltr:max-w-[85%] mb-8 flex items-center justify-center gap-4 flex-wrap"
-      >
-        <component
-          :is="elem"
-          v-for="(elem, idx) of headingTitleElem"
-          :key="idx"
-        />
-      </span>
+      <TransitionGroup name="fade-down" mode="out-in">
+        <span
+          v-if="isInView"
+          style="transition-delay: 100ms"
+          class="tablet:max-w-[70%] tablet:ltr:max-w-[85%] mb-8 flex items-center justify-center gap-4 flex-wrap"
+        >
+          <component
+            :is="elem"
+            v-for="(elem, idx) of headingTitleElem"
+            :key="idx"
+          />
+        </span>
 
-      <p class="max-w-2xl mx-auto mb-8 ltr:text-base text-lg text-white/70">
-        {{ hero.home?.heroDescription }}
-      </p>
-      <NuxtLink
-        class="bg-white text-primary font-semibold px-8 py-3 rounded-full hover:bg-gray-100 transition-colors"
-        :href="pathWithLocale(hero.home?.heroCtaHref)"
-      >
-        {{ hero.home?.heroCtaTitle }}
-      </NuxtLink>
+        <p
+          v-if="isInView"
+          style="transition-delay: 300ms"
+          class="max-w-2xl delay-150 mx-auto mb-8 ltr:text-base text-lg text-white/70"
+        >
+          {{ hero.home?.heroDescription }}
+        </p>
+      </TransitionGroup>
+      <Transition name="fade-up" mode="out-in">
+        <NuxtLink
+          v-if="isInView"
+          style="transition-delay: 400ms"
+          class="bg-white delay-200 text-primary font-semibold px-8 py-3 rounded-full hover:bg-gray-100 transition-colors"
+          :href="pathWithLocale(hero.home?.heroCtaHref)"
+        >
+          {{ hero.home?.heroCtaTitle }}
+        </NuxtLink>
+      </Transition>
     </div>
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { NuxtLink } from "#components";
+import type { VNodeRef } from "vue";
 import { QUERY_KEYS } from "~/constants/query-keys";
 const img = useImage();
+const elementRef = ref<VNodeRef | null>(null);
+const { isInView } = useInView(elementRef);
 const { $directus } = useNuxtApp();
 const { currentLocale, getLocaleObject, pathWithLocale } = useI18n();
 const { data: heroData } = await useAsyncData(QUERY_KEYS.pages.home.hero, () =>
@@ -108,3 +125,25 @@ const headingTitleElem = computed(() =>
   )
 );
 </script>
+<style>
+.fade-down-enter-active,
+.fade-down-leave-active {
+  transition: all 1s;
+  will-change: opacity, transform;
+}
+.fade-down-enter-from,
+.fade-down-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+.fade-up-enter-active,
+.fade-up-leave-active {
+  transition: all 1s;
+  will-change: opacity, transform;
+}
+.fade-up-enter-from,
+.fade-up-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+</style>
