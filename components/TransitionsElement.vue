@@ -14,5 +14,4 @@ defineProps<{
   transitionName: string;
   transitionMode: "in-out" | "out-in" | "default";
 }>();
-console.log("isInView", isInView);
 </script>

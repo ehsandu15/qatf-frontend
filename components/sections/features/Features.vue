@@ -16,14 +16,15 @@
         name="scale-enter"
         class="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
       >
-        <li
-          v-for="(stat, idx) of features?.servicesList"
+        <sections-features-feature-Item
+          v-for="(feature, idx) of features?.servicesList"
           v-show="isInView"
           :key="idx"
+          :feature
+          :is-in-view="isInView"
+        />
+        <!-- <li
           class="flex flex-col gap-1.5 shadow-2xl p-5 rounded-[24px]"
-          :style="{
-            order: stat.isActive ? 1 : idx + 1,
-          }"
           :class="[stat.isActive ? 'bg-primary' : `bg-white`]"
         >
           <h3
@@ -38,7 +39,7 @@
           >
             {{ stat.description }}
           </p>
-        </li>
+        </li> -->
       </TransitionGroup>
     </template>
   </div>

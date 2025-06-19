@@ -179,15 +179,75 @@
         type="button"
         class="rounded-full py-2 px-5 w-full text-white mt-8 bg-emerald-600"
       >
-        لقد تم إرسال الطلب بنجاح, تفقد بريدك الالكتروني
+        {{ cartContent.modalOrderSendSuccessMessage || "تم إضافة الطلب بنجاح" }}
       </button>
       <button
         v-if="isError"
         type="button"
         class="rounded-full truncate overflow-hidden max-w-full py-2 px-5 w-full text-white mt-8 bg-red-600"
       >
-        {{ errorMsg }}
+        {{
+          errorMsg ||
+          cartContent.modalOrderSendErrorMessage ||
+          "حدث خطأ أثناء إضافة الطلب"
+        }}
       </button>
+      <div
+        v-if="orderTicketId"
+        class="w-full flex items-center justify-between mt-6 bg-zinc-100 px-2 py-4 rounded-lg"
+      >
+        <span class="flex items-center justify-center gap-2">
+          <span>{{ cartContent.orderNo }}</span>
+          <strong class="underline">{{ orderTicketId }}</strong>
+        </span>
+        <button
+          v-if="!isCopied"
+          type="button"
+          class="text-gray-600"
+          @click="handleCopyTicketId(orderTicketId?.toString())"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-clipboard-copy-icon lucide-clipboard-copy"
+          >
+            <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
+            <path
+              d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"
+            />
+            <path d="M16 4h2a2 2 0 0 1 2 2v4" />
+            <path d="M21 14H11" />
+            <path d="m15 10-4 4 4 4" />
+          </svg>
+        </button>
+        <button v-if="isCopied" type="button" class="text-gray-600">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-clipboard-check-icon lucide-clipboard-check"
+          >
+            <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
+            <path
+              d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"
+            />
+            <path d="m9 14 2 2 4-4" />
+          </svg>
+        </button>
+      </div>
     </div>
   </Modal>
 </template>
@@ -195,7 +255,6 @@
 import { QUERY_KEYS } from "~/constants/query-keys";
 import type { CartType, CreateCartItemType } from "~/types/cart";
 import type { DirectUsTranslations } from "~/types/directus";
-import type { Product } from "~/types/product";
 
 const emits = defineEmits<{
   (e: "close-modal"): void;
@@ -237,6 +296,9 @@ const { data } = await useAsyncData(QUERY_KEYS.pages.cartContent, () =>
             modalOrderValidationMessage
             modalActivityValidationMessage
             modalOrderedBeforeOptions
+            modalOrderSendSuccessMessage
+            modalOrderSendErrorMessage
+            orderNo
           }
         }
       }
@@ -274,6 +336,9 @@ const isValidForm = computed(() => {
     props.cart.length > 0
   );
 });
+const isCopied = ref<boolean>(false);
+const copyTicketTimeoutRef = ref<NodeJS.Timeout | null>(null);
+const orderTicketId = shallowRef<number | null>(null);
 
 const resetForm = () => {
   form.companyName = "";
@@ -285,6 +350,19 @@ const resetForm = () => {
   touched.phone = false;
   touched.activity = false;
   touched.isOrderedBefore = false;
+};
+
+const handleCopyTicketId = (ticketId: string | undefined) => {
+  if (copyTicketTimeoutRef.value) {
+    clearTimeout(copyTicketTimeoutRef.value);
+  }
+  if (orderTicketId.value) {
+    navigator.clipboard.writeText(ticketId);
+    isCopied.value = true;
+    copyTicketTimeoutRef.value = setTimeout(() => {
+      isCopied.value = false;
+    }, 3000);
+  }
 };
 
 const createCartItems = async ({
@@ -364,6 +442,8 @@ const handleSubmit = async () => {
         if (!response._data.data.data.id) {
           throw new Error("Cart ID is not found");
         }
+        const ticketId = response._data.data.data.ticketId;
+        orderTicketId.value = ticketId || null;
         await createCartItems({
           cartId: response._data.data.data.id,
           onSuccess: () => {
